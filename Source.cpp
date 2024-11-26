@@ -605,7 +605,7 @@ void lmenusff(MenuStorage& menuS, const string filePath = "menus") {
 	else { throw MyException(string("File not found..."), __LINE__); }
 }
 
-//burada qaldin
+//burada qaldin - add menu (iki elave repository (meals, ingredients))
 
 #pragma endregion
 
