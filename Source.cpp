@@ -29,6 +29,8 @@ int count_ih;
 
 #pragma endregion
 
+#pragma region Files
+
 #pragma region Restaurant balance file
 
 //load balance to file
@@ -606,6 +608,8 @@ void lmenusff(MenuStorage& menuS, const string filePath = "menus") {
 }
 
 //burada qaldin - add menu (iki elave repository (meals, ingredients))
+
+#pragma endregion
 
 #pragma endregion
 
