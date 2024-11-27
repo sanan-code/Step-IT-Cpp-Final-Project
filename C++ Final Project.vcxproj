@@ -132,7 +132,7 @@
   <ItemGroup>
     <ClInclude Include="Common.h" />
     <ClInclude Include="Exception.h" />
-    <ClInclude Include="IngredientsManagement.h" />
+    <ClInclude Include="IngredientsStorage.h" />
     <ClInclude Include="IngredientsHistory.h" />
     <ClInclude Include="MealStorage.h" />
     <ClInclude Include="Menus.h" />

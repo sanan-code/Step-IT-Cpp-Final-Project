@@ -2,7 +2,7 @@
 #include<iostream>
 #include"Exception.h"
 #include"string"
-#include"IngredientsManagement.h"
+#include"IngredientsStorage.h"
 #include"Common.h"
 using namespace std;
 
@@ -101,6 +101,7 @@ public:
 #pragma endregion
 
 #pragma region Methods
+
 	void add(Meal*& meal) {
 		if (meal == nullptr) { throw MyException(string("Parameter ingredient can not be null pointer"), __LINE__); }
 

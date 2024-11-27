@@ -68,6 +68,18 @@ public:
 		if (r != ind) { cout << ", "; }
 	}
 
+	void show3(int r, int ind) {
+		//ancaq adlari ve sayini gosterir
+		cout << r << ". ";
+		cout << name;
+		cout << ", (";
+		cout << count;
+		cout << ") [";
+		cout << price;
+		cout << "]";
+		if (r != ind) { cout << ", "; }
+	}
+
 	double total() { return count * price; }
 #pragma endregion
 
@@ -288,6 +300,12 @@ public:
 			if (t == 2) {
 				ingredients[i]->show2(i + 1, ind);
 				if ((i + 1) % 3 == 0) { cout << endl; } //i+1 % 3 (3-3 duzmek)
+			}
+
+			//show3
+			if (t == 3) {
+				ingredients[i]->show3(i + 1, ind);
+				if ((i + 1) % 2 == 0) { cout << endl; } //(2-2 duzmek)
 			}
 
 		}

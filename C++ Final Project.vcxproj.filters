@@ -32,7 +32,7 @@
     <ClInclude Include="Menus.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="IngredientsManagement.h">
+    <ClInclude Include="IngredientsStorage.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="IngredientsHistory.h">

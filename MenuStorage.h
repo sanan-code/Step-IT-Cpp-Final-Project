@@ -133,6 +133,25 @@ public:
 		if (msg) { cout << id << ": id was deleted..." << endl; }
 	}
 
+	//gonderilen meal idnin melumatlarini gosterir
+	void show1(int mealId, MealStorage& ms, IngredientStorage& is) {
+		int ingId = 0;
+
+		cout << "Meal name: " << ms.get_meals()[ms.findMealById(mealId)]->get_name() << endl;
+
+		for (size_t i = 0; i < ind; i++) { //menu uzerinde addimlama
+			if (menus[i]->get_mealId() == mealId) {
+				ingId = menus[i]->get_ingId();
+
+				cout << is.get_ingredients()[is.findIngredientById(ingId)]->get_name();
+				cout << " (" << menus[i]->get_ingCount() << ")";
+				cout << ", ";
+
+			}
+		}
+
+	}
+
 #pragma endregion
 
 };
