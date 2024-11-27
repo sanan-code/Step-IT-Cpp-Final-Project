@@ -1,17 +1,17 @@
 1^Spaghetti^19^7
-2^Ground Beef^22^8
-3^Tomato Sauce^16^7
+2^GroundBeef^22^8
+3^TomatoSauce^16^7
 4^Garlic^17^9
 5^Onion^27^10
-6^Chicken Breast^23^6
+6^ChickenBreast^23^6
 7^Lettuce^24^5
 8^Tomatoes^24^9
 9^Cucumbers^20^6
 10^Dressing^24^10
-11^Bell Peppers^16^10
+11^BellPeppers^16^10
 12^Broccoli^29^9
-13^Soy Sauce^30^5
-14^Sesame Oil^27^10
+13^SoySauce^30^5
+14^SesameOil^27^10
 15^Flour^15^5
 16^Milk^30^10
 17^Eggs^25^8
@@ -20,6 +20,6 @@
 20^Tortillas^27^8
 21^Salsa^20^8
 22^Cheese^29^5
-23^Pizza Dough^19^8
+23^PizzaDough^19^8
 24^Mozzarella^27^7
 25^Basil^18^8

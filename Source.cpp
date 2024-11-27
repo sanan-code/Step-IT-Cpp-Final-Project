@@ -850,8 +850,9 @@ void main() {
 									}
 									catch (MyException& ex) { cout << ex.get_txt() << "\n\n"; }
 									break;
-								case 2: //update ingredient name - ok
+								case 2: //update ingredient name
 									try {
+										is.show();
 										updateIngIndex = getMenuSelection(1, is.get_ind());
 										cout << "New ingredient name: ";
 										cin >> ingNewName;
@@ -860,7 +861,7 @@ void main() {
 									}
 									catch (MyException& ex) { cout << "Error: " << ex.get_txt() << "\n\n"; }
 									break;
-								case 3: //update count of ingredient - ok
+								case 3: //update count of ingredient
 									is.show();
 									try {
 										updateIngIndex = getMenuSelection(1, is.get_ind());
@@ -873,7 +874,7 @@ void main() {
 									catch (MyException& ex) { cout << "Error: " << ex.get_txt() << "\n\n"; }
 									cout << "Ingredient updated..." << endl;
 									break;
-								case 4: //remove ingredient - ok
+								case 4: //remove ingredient
 									is.show();
 									try {
 										removeIngIndex = getMenuSelection(1, is.get_ind());
@@ -884,7 +885,7 @@ void main() {
 									catch (MyException& ex) { cout << "Error: " << ex.get_txt() << "\n\n"; }
 									cout << "Ingredient removed..." << endl;
 									break;
-								case 5: //show all ingredients - ok
+								case 5: //show all ingredients
 									cout << "All ingredients in stock" << endl;
 									is.show();
 									break;
@@ -905,7 +906,7 @@ void main() {
 								system("cls");
 
 								switch (ae_admin_meals) {
-								case 1: //add meal - ok
+								case 1: //add meal
 									cout << "Add new meal to menu" << endl;
 									try { addNewMeal(ms); }
 									catch (MyException& ex) { cout << ex.get_txt() << "\n\n"; }
@@ -914,7 +915,7 @@ void main() {
 									break;
 								case 3: //remove meal
 									break;
-								case 4: //show all meals - ok
+								case 4: //show all meals
 									as.showAll();
 									break;
 								case 5: //go back - ok
@@ -962,7 +963,7 @@ void main() {
 									break;
 								case 2: //Show all users
 									break;
-								case 3: //Ingredient history - ok
+								case 3: //Ingredient history
 									cout << "Total buy count: " << ihs.get_total_count() << endl;
 									cout << "Total transaction: " << ihs.get_ind() << endl;
 									ihs.make_history_table();

@@ -63,7 +63,7 @@ int menu2_2() {
 
 int menu2_3() {
 	//girisden sonra admin
-	cout << "1. Ingredients" << endl;
+	cout << "\n1. Ingredients" << endl;
 	cout << "2. Meals" << endl;
 	cout << "3. Menus" << endl;
 	cout << "4. Other" << endl;
@@ -76,7 +76,7 @@ int menu2_3() {
 int menu2_3_1() {
 	//admin ingredients
 
-	cout << "1. add ingredient" << endl;
+	cout << "\n1. add ingredient" << endl;
 	cout << "2. update ingredient name" << endl;
 	cout << "3. update count of ingredient" << endl;
 	cout << "4. remove ingredient" << endl;
@@ -90,7 +90,7 @@ int menu2_3_1() {
 int menu2_3_2() {
 	//admin meals
 
-	cout << "1. add meal" << endl;
+	cout << "\n1. add meal" << endl;
 	cout << "2. update meal" << endl;
 	cout << "3. remove meal" << endl;
 	cout << "4. show all meals" << endl;
@@ -103,7 +103,7 @@ int menu2_3_2() {
 int menu2_3_3() {
 	//admin menus
 
-	cout << "1. add menu" << endl;
+	cout << "\n1. add menu" << endl;
 	cout << "2. update menu" << endl;
 	cout << "3. remove menu" << endl;
 	cout << "4. show all menus" << endl;
@@ -116,7 +116,7 @@ int menu2_3_3() {
 int menu2_3_4() {
 	//admin others
 
-	cout << "1. Restaurant balance" << endl;
+	cout << "\n1. Restaurant balance" << endl;
 	cout << "2. Show all users" << endl;
 	cout << "3. Ingredient history" << endl;
 	cout << "4. go back" << endl;
