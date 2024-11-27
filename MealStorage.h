@@ -48,10 +48,10 @@ public:
 
 #pragma region Methods
 	void show(int r) {
+		cout << r << ". ";
 		cout << "[" << id << "] ";
 		cout << name;
 		cout << " (" << price << ")";
-		cout << endl;
 	}
 
 #pragma endregion
@@ -166,7 +166,7 @@ public:
 			}
 		}
 
-		if (msg) { cout << newName << " updated"; }
+		if (msg) { cout << newName << " updated" << endl; }
 	}
 
 	void updateMealPriceById(int id, double price, bool msg = false) {
@@ -202,6 +202,13 @@ public:
 		}
 
 		return -1;
+	}
+
+	void show() {
+		for (size_t i = 0; i < ind; i++) {
+			meals[i]->show(i + 1);
+			cout << endl;
+		}
 	}
 
 #pragma endregion

@@ -91,10 +91,11 @@ int menu2_3_2() {
 	//admin meals
 
 	cout << "\n1. add meal" << endl;
-	cout << "2. update meal" << endl;
-	cout << "3. remove meal" << endl;
-	cout << "4. show all meals" << endl;
-	cout << "5. go back" << endl;
+	cout << "2. update meal name" << endl;
+	cout << "3. update meal price" << endl;
+	cout << "4. remove meal" << endl;
+	cout << "5. show all meals" << endl;
+	cout << "6. go back" << endl;
 
 	int selection = getMenuSelection(1, 5);
 	return selection;

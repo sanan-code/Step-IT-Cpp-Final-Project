@@ -631,11 +631,6 @@ void main() {
 	int menu3_select = 0;
 	int menu2_1_select = 0, menu2_2_select = 0, menu2_3_select = 0;
 	int menu2_3_1_select = 0, menu2_3_2_select = 0, menu2_3_3_select = 0, menu2_3_4_select = 0;
-
-	int removeIngIndex = 0, updateIngIndex = 0;
-	int deleteMealSelection = 0; //admin terefden meal silinmesi secimi
-	int uic_newCount = 0; //admin update ingredient count
-	string ingNewName;
 #pragma endregion
 
 #pragma region Load datas from files
@@ -668,7 +663,7 @@ void main() {
 	catch (MyException& ex) { cout << ex.get_txt() << "\n\n"; }
 #pragma endregion
 
-	programHeader(); //header
+	programHeader();
 
 	while (program)
 	{
@@ -804,7 +799,7 @@ void main() {
 					}
 
 					break;
-				case 2: //employee
+				case 2: //employee - ok
 
 					while (ae_employee) { //ok
 						try { menu2_2_select = menu2_2(); }
@@ -850,33 +845,49 @@ void main() {
 									}
 									catch (MyException& ex) { cout << ex.get_txt() << "\n\n"; }
 									break;
-								case 2: //update ingredient name
+								case 2: //update ingredient name - ok
 									try {
-										is.show();
+										string ingNewName;
+										int updateIngIndex;
+										cout << "Select from Ingredient list" << endl;
+										is.show(2);
 										updateIngIndex = getMenuSelection(1, is.get_ind());
 										cout << "New ingredient name: ";
 										cin >> ingNewName;
-										is.updateNameById(is.get_ingredients()[is.findIngredientByName(ingNewName)]->get_id(), ingNewName);
+										is.updateNameById(is.get_ingredients()[updateIngIndex - 1]->get_id(), ingNewName);
 										litf(is);
+										cout << "Ingredient name updated.." << endl;
 									}
 									catch (MyException& ex) { cout << "Error: " << ex.get_txt() << "\n\n"; }
 									break;
-								case 3: //update count of ingredient
-									is.show();
+								case 3: //update count of ingredient - ok
 									try {
+										int uic_newCount, updateIngIndex;
+										cout << "Select from Ingredient list" << endl;
+										cout << "Row number. [id] ingredient name, count, price" << endl << endl;
+										is.show(1);
 										updateIngIndex = getMenuSelection(1, is.get_ind());
 										cout << "New count: ";
 										cin >> uic_newCount;
 										is.updateCount1(is.get_ingredients()[updateIngIndex - 1]->get_id(), uic_newCount);
-										updateRestaurantBalance2(is);
+
+										//azalir coxalir?
+										if (uic_newCount - is.get_ingredients()[updateIngIndex - 1]->get_count() >= 0) { // coxalir
+											updateRestaurantBalance1(uic_newCount, is.get_ingredients()[updateIngIndex - 1]->get_price(), '+');
+										}
+										else {
+											updateRestaurantBalance1(uic_newCount, is.get_ingredients()[updateIngIndex - 1]->get_price(), '-');
+										}
+
 										litf(is);
+										cout << "Ingredient count updated.." << endl;
 									}
 									catch (MyException& ex) { cout << "Error: " << ex.get_txt() << "\n\n"; }
-									cout << "Ingredient updated..." << endl;
 									break;
-								case 4: //remove ingredient
-									is.show();
+								case 4: //remove ingredient - ok
 									try {
+										int removeIngIndex;
+										is.show(2);
 										removeIngIndex = getMenuSelection(1, is.get_ind());
 										updateRestaurantBalance1(is.get_ingredients()[removeIngIndex - 1]->get_count(), is.get_ingredients()[removeIngIndex - 1]->get_price(), '+');
 										is.removeByIndex(removeIngIndex, true);
@@ -885,9 +896,10 @@ void main() {
 									catch (MyException& ex) { cout << "Error: " << ex.get_txt() << "\n\n"; }
 									cout << "Ingredient removed..." << endl;
 									break;
-								case 5: //show all ingredients
+								case 5: //show all ingredients - ok
 									cout << "All ingredients in stock" << endl;
-									is.show();
+									cout << "Row number. [id] ingredient name, count, price" << endl;
+									is.show(1);
 									break;
 								case 6: //go back-ok
 									ae_admin_ingredients = false;
@@ -905,20 +917,36 @@ void main() {
 								catch (MyException& ex) { cout << ex.get_txt() << "\n\n"; }
 								system("cls");
 
-								switch (ae_admin_meals) {
-								case 1: //add meal
+								switch (menu2_3_2_select) {
+								case 1: //add meal - ok
 									cout << "Add new meal to menu" << endl;
 									try { addNewMeal(ms); }
 									catch (MyException& ex) { cout << ex.get_txt() << "\n\n"; }
 									break;
-								case 2: //update meal
+								case 2: //update meal name - ok
+									try {
+										string updatemealNewName;
+										int updateMealNameIndex;
+										ms.show();
+										updateMealNameIndex = getMenuSelection(1, ms.get_ind());
+										cout << "New meal name: ";
+										cin >> updatemealNewName;
+										ms.updateMealNameById(ms.get_meals()[updateMealNameIndex - 1]->get_id(), updatemealNewName, true);
+										lmtf(ms);
+									}
+									catch (MyException& ex) { cout << ex.get_txt() << "\n\n"; }
 									break;
-								case 3: //remove meal
+								case 3: //update meal price
+									//burada qaldin
 									break;
-								case 4: //show all meals
-									as.showAll();
+								case 4: //remove meal
 									break;
-								case 5: //go back - ok
+								case 5: //show all meals - ok
+									cout << "All meals in menu" << endl;
+									cout << "[id] meal name (price)" << endl << endl;
+									ms.show();
+									break;
+								case 6: //go back - ok
 									ae_admin_meals = false;
 									break;
 								}

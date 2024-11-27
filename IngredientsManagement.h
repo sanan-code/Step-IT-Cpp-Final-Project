@@ -61,10 +61,11 @@ public:
 		cout << name << ", " << count << ", " << price;
 	}
 
-	void show2(int r) {
+	void show2(int r, int ind) {
 		//ancaq adlari gosterir
 		cout << r << ". ";
-		cout << name << ", ";
+		cout << name;
+		if (r != ind) { cout << ", "; }
 	}
 
 	double total() { return count * price; }
@@ -272,21 +273,26 @@ public:
 		return -1;
 	}
 
-	void show() {
+	void show(int t) {
 		if (ingredients == nullptr) { throw MyException(string("There is not any ingredients in the Stock"), __LINE__); }
 
 		for (size_t i = 0; i < ind; i++) {
-			ingredients[i]->show(i + 1);
-			cout << endl;
-		}
-	}
 
-	void show2() {
-		if (ingredients == nullptr) { throw MyException(string("There is not any ingredients in the Stock"), __LINE__); }
+			//show
+			if (t == 1) {
+				ingredients[i]->show(i + 1);
+				cout << endl;
+			}
 
-		for (size_t i = 0; i < ind; i++) {
-			ingredients[i]->show2(i + 1);
+			//show2
+			if (t == 2) {
+				ingredients[i]->show2(i + 1, ind);
+				if ((i + 1) % 3 == 0) { cout << endl; } //i+1 % 3 (3-3 duzmek)
+			}
+
 		}
+
+		cout << endl << endl;
 	}
 
 #pragma endregion
