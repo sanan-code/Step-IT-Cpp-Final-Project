@@ -92,8 +92,6 @@ public:
 	Menu**& get_menus() { return menus; }
 	int get_capacity() { return capacity; }
 	int get_ind() { return ind; }
-	int get_incrementSize() { return incrementSize; }
-
 #pragma endregion
 
 #pragma region Methods
@@ -115,55 +113,24 @@ public:
 		ind++;
 	}
 
-	void show() {
+	void removeById(int id, bool msg = false) {
+		if (id <= 0) { throw MyException(et4("Menu id", "0"), __LINE__); }
+		int r = 0;
+
+		//main
+		Menu** temp = new Menu * [capacity] {};
 		for (size_t i = 0; i < ind; i++) {
-			menus[i]->show(i + 1);
-		}
-	}
-
-	void show2(MealStorage& ms) {
-		//ancaq olmayanlari goster
-		//meqsed ingredientleri elave etmekdi (ad ve sayini)
-
-		bool flag = false;
-		int r = 1;
-
-		for (size_t i = 0; i < ms.get_ind(); i++) { //MealStorage
-			for (size_t j = 0; j < ind; j++) { //MenuStorage
-				if (ms.get_meals()[i]->get_id() == menus[j]->get_mealId()) { flag = true; }
-			}
-
-			//olmayanlari goster
-			if (!flag) {
-				ms.get_meals()[i]->show(r);
+			if (menus[i]->get_mealId() != id) {
+				temp[r] = menus[i];
 				r++;
 			}
-
-			flag = false;
 		}
 
-	}
+		delete[] menus;
+		menus = temp;
+		ind -= (ind - r);
 
-	void show3(MealStorage& ms, IngredientStorage& is) {
-		//adi, qiymeti ve ingredient siyahisi olan
-
-		int mealId;
-		int ingId;
-
-		for (size_t i = 0; i < ms.get_ind(); i++) { //meals
-			mealId = ms.get_meals()[i]->get_id();
-			ms.get_meals()[ms.findById(mealId)]->show(i + 1);
-
-			for (size_t j = 0; j < ind; j++) { //menus
-				if (mealId == menus[j]->get_mealId()) {
-					ingId = menus[j]->get_ingId();
-
-					is.get_ingredients()[is.getIngredientById(ingId)]->show2(j + 1);
-				}
-			}
-
-		}
-
+		if (msg) { cout << id << ": id was deleted..." << endl; }
 	}
 
 #pragma endregion

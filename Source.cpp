@@ -620,41 +620,51 @@ void main() {
 #pragma region Variables
 	bool program = true;
 	bool login, signin, enterance, afterEntr;
-	bool ae_admin, ae_employee, ae_customer; //ae->after enterance
-	bool ae_admin_history, ae_customer_orderameal;
 
-	int menu1_select = 0, menu2_select = 0, menu3_select = 0;
-	int menu4_1_select = 0, menu4_2_select = 0, menu4_3_select = 0;
-	int menu4_1_1_select = 0;
+	//ae->after enterance
+	bool ae_admin, ae_employee, ae_customer;
+
+	bool ae_admin_ingredients, ae_admin_meals, ae_admin_others, ae_admin_menus;
+
+	int menu1_select = 0;
+	int menu2_select = 0;
+	int menu3_select = 0;
+	int menu2_1_select = 0, menu2_2_select = 0, menu2_3_select = 0;
+	int menu2_3_1_select = 0, menu2_3_2_select = 0, menu2_3_3_select = 0, menu2_3_4_select = 0;
 
 	int removeIngIndex = 0, updateIngIndex = 0;
 	int deleteMealSelection = 0; //admin terefden meal silinmesi secimi
 	int uic_newCount = 0; //admin update ingredient count
+	string ingNewName;
 #pragma endregion
 
 #pragma region Load datas from files
 	restaurantBalance = lbff();
 
+	//accounts
 	AccountsStorage as(5, 3);
-	try { lsaff_all(as); } //accounts
+	try { lsaff_all(as); }
 	catch (MyException& ex) { cout << ex.get_txt() << "\n\n"; }
 
+	//ingredients
 	IngredientStorage is(5, 3);
-	try { liff(is); } //ingredients
+	try { liff(is); }
 	catch (MyException& ex) { cout << ex.get_txt() << "\n\n"; }
 
-	MealStorage ms(5, 3); //meals faylindan
+	// meals
+	MealStorage ms(5, 3);
 	try { lmff(ms); }
 	catch (MyException& ex) { cout << ex.get_txt() << "\n\n"; }
 
-	MenuStorage menuSto(5, 3); //menus faylindan
+	//menus
+	MenuStorage menuSto(5, 3);
 	try { lmenusff(menuSto); }
 	catch (MyException& ex) { cout << ex.get_txt() << "\n\n"; }
 
 
-
+	//ingredients history
 	IngredientsHistoryStorage ihs(10, 3);
-	try { lihff(ihs); } //ingredients history
+	try { lihff(ihs); }
 	catch (MyException& ex) { cout << ex.get_txt() << "\n\n"; }
 #pragma endregion
 
@@ -775,20 +785,12 @@ void main() {
 				case 1: //customer
 
 					while (ae_customer) {
-						try { menu4_2_select = menu4_2(); }
+						try { menu2_1_select = menu2_1(); }
 						catch (MyException& ex) { cout << ex.get_txt() << "\n\n"; }
 						system("cls");
 
-						switch (menu4_2_select) {
+						switch (menu2_1_select) {
 						case 1: //Order a meal
-							ae_customer_orderameal = true;
-
-							while (ae_customer_orderameal) {
-								cout << "\t\t---Menu---" << endl;
-								cout << "Only available meals according to ingredient storage\n\n";
-								//burada qaldin
-							}
-
 							break;
 						case 2: //Show menu
 							break;
@@ -804,19 +806,19 @@ void main() {
 					break;
 				case 2: //employee
 
-					while (ae_employee) {
-						try { menu4_3_select = menu4_3(); }
+					while (ae_employee) { //ok
+						try { menu2_2_select = menu2_2(); }
 						catch (MyException& ex) { cout << ex.get_txt() << "\n\n"; }
 						system("cls");
 						Employee* data;
 
-						switch (menu4_3_select) {
-						case 1:
+						switch (menu2_2_select) {
+						case 1: //show info - ok
 							cout << "Your info: " << endl;
 							data = dynamic_cast<Employee*>(as.get_accounts()[as.findAccountByUsername(currentUsername)]);
 							data->show();
 							break;
-						case 2:
+						case 2: //go back - ok
 							ae_employee = false;
 							afterEntr = false;
 							break;
@@ -827,114 +829,165 @@ void main() {
 				case 3: //admin
 
 					while (ae_admin) {
-						try { menu4_1_select = menu4_1(); }
+						try { menu2_3_select = menu2_3(); }
 						catch (MyException& ex) { cout << ex.get_txt() << "\n\n"; }
 						system("cls");
 
-						switch (menu4_1_select) {
-						case 1: //add ingredient - ok
-							try {
-								addNewIngredients(is);
-								addNewIngredientsHistory(ihs);
-							}
-							catch (MyException& ex) { cout << ex.get_txt() << "\n\n"; }
-							break;
-						case 2: //remove ingredient - ok
-							is.show();
-							try {
-								removeIngIndex = getMenuSelection(1, is.get_ind());
-								updateRestaurantBalance1(is.get_ingredients()[removeIngIndex - 1]->get_count(), is.get_ingredients()[removeIngIndex - 1]->get_price(), '+');
-								is.removeByIndex(removeIngIndex, true);
-								litf(is);
-							}
-							catch (MyException& ex) { cout << "Error: " << ex.get_txt() << "\n\n"; }
-							cout << "Ingredient removed..." << endl;
-							break;
-						case 3: //update count of ingredient - ok
-							is.show();
-							try {
-								updateIngIndex = getMenuSelection(1, is.get_ind());
-								cout << "New count: ";
-								cin >> uic_newCount;
-								is.updateCount1(is.get_ingredients()[updateIngIndex - 1]->get_name(), uic_newCount);
-								updateRestaurantBalance2(is);
-								litf(is);
-							}
-							catch (MyException& ex) { cout << "Error: " << ex.get_txt() << "\n\n"; }
-							cout << "Ingredient updated..." << endl;
-							break;
-						case 4: //show all ingredients - ok
-							cout << "All ingredients in stock" << endl;
-							is.show();
-							break;
-						case 5: //show restaurant balance - ok
-							cout << "Restaurant balance: " << restaurantBalance << endl;
-							break;
-						case 6: //history - ok
-							ae_admin_history = true;
+						switch (menu2_3_select) {
+						case 1: //Ingredients
+							ae_admin_ingredients = true;
 
-							while (ae_admin_history) {
-								try { menu4_1_1_select = menu4_1_1(); }
+							while (ae_admin_ingredients) { //ok
+								try { menu2_3_1_select = menu2_3_1(); }
 								catch (MyException& ex) { cout << ex.get_txt() << "\n\n"; }
 								system("cls");
 
-								switch (menu4_1_1_select) {
-								case 1: //ingredients history
-									cout << "Total buy count: " << ihs.get_total_count() << endl;
-									cout << "Total transaction: " << ihs.get_ind() << endl;
-									ihs.make_history_table();
+								switch (menu2_3_1_select) {
+								case 1: //add ingredient - ok
+									try {
+										addNewIngredients(is);
+										addNewIngredientsHistory(ihs);
+									}
+									catch (MyException& ex) { cout << ex.get_txt() << "\n\n"; }
 									break;
-								case 2: //go back
-									ae_admin_history = false;
+								case 2: //update ingredient name - ok
+									try {
+										updateIngIndex = getMenuSelection(1, is.get_ind());
+										cout << "New ingredient name: ";
+										cin >> ingNewName;
+										is.updateNameById(is.get_ingredients()[is.findIngredientByName(ingNewName)]->get_id(), ingNewName);
+										litf(is);
+									}
+									catch (MyException& ex) { cout << "Error: " << ex.get_txt() << "\n\n"; }
+									break;
+								case 3: //update count of ingredient - ok
+									is.show();
+									try {
+										updateIngIndex = getMenuSelection(1, is.get_ind());
+										cout << "New count: ";
+										cin >> uic_newCount;
+										is.updateCount1(is.get_ingredients()[updateIngIndex - 1]->get_id(), uic_newCount);
+										updateRestaurantBalance2(is);
+										litf(is);
+									}
+									catch (MyException& ex) { cout << "Error: " << ex.get_txt() << "\n\n"; }
+									cout << "Ingredient updated..." << endl;
+									break;
+								case 4: //remove ingredient - ok
+									is.show();
+									try {
+										removeIngIndex = getMenuSelection(1, is.get_ind());
+										updateRestaurantBalance1(is.get_ingredients()[removeIngIndex - 1]->get_count(), is.get_ingredients()[removeIngIndex - 1]->get_price(), '+');
+										is.removeByIndex(removeIngIndex, true);
+										litf(is);
+									}
+									catch (MyException& ex) { cout << "Error: " << ex.get_txt() << "\n\n"; }
+									cout << "Ingredient removed..." << endl;
+									break;
+								case 5: //show all ingredients - ok
+									cout << "All ingredients in stock" << endl;
+									is.show();
+									break;
+								case 6: //go back-ok
+									ae_admin_ingredients = false;
+									break;
+								}
+
+							}
+
+							break;
+						case 2: //Meals
+							ae_admin_meals = true;
+
+							while (ae_admin_meals) {
+								try { menu2_3_2_select = menu2_3_2(); }
+								catch (MyException& ex) { cout << ex.get_txt() << "\n\n"; }
+								system("cls");
+
+								switch (ae_admin_meals) {
+								case 1: //add meal - ok
+									cout << "Add new meal to menu" << endl;
+									try { addNewMeal(ms); }
+									catch (MyException& ex) { cout << ex.get_txt() << "\n\n"; }
+									break;
+								case 2: //update meal
+									break;
+								case 3: //remove meal
+									break;
+								case 4: //show all meals - ok
+									as.showAll();
+									break;
+								case 5: //go back - ok
+									ae_admin_meals = false;
 									break;
 								}
 							}
 
 							break;
-						case 7: //add new meal
-							cout << "Add new meal to menu" << endl;
-							try { addNewMeal(ms); }
-							catch (MyException& ex) { cout << ex.get_txt() << "\n\n"; }
-							break;
-						case 8: //delete meal
-							cout << "Delete meal" << endl;
+						case 3: //Menus
+							ae_admin_menus = true;
 
-							//
+							while (ae_admin_menus) {
+								try { menu2_3_3_select = menu2_3_3(); }
+								catch (MyException& ex) { cout << ex.get_txt() << "\n\n"; }
+								system("cls");
 
-							break;
-						case 9: //show menu - menyuya daxil etmek ucun gozleyenler
-							cout << "Waiting for add to menu" << endl;
-							menuSto.show2(ms);
-							break;
-						case 10: //show full menu
-							cout << "Full menu" << endl;
-
-							menuSto.show3(ms, is);
-
-							break;
-						case 11: //complete menu
-							cout << "Complete menu" << endl;
-
-							//
+								switch (ae_admin_menus) {
+								case 1: //add menu
+									break;
+								case 2: //update menu
+									break;
+								case 3: //remove menu
+									break;
+								case 4: //show all menus
+									break;
+								case 5: //go back
+									ae_admin_menus = false;
+									break;
+								}
+							}
 
 							break;
-						case 12: //show all users
-							as.showAll();
+						case 4: //Other
+							ae_admin_others = true;
+
+							while (ae_admin_others) {
+								try { menu2_3_4_select = menu2_3_4(); }
+								catch (MyException& ex) { cout << ex.get_txt() << "\n\n"; }
+								system("cls");
+
+								switch (menu2_3_4_select) {
+								case 1: //Restaurant balance
+									cout << "Restaurant balance: " << restaurantBalance << endl;
+									break;
+								case 2: //Show all users
+									break;
+								case 3: //Ingredient history - ok
+									cout << "Total buy count: " << ihs.get_total_count() << endl;
+									cout << "Total transaction: " << ihs.get_ind() << endl;
+									ihs.make_history_table();
+									break;
+								case 4: //go back
+									ae_admin_others = false;
+									break;
+								}
+							}
+
 							break;
-						case 13: //go back
+						case 5: //go back - ok
 							ae_admin = false;
 							afterEntr = false;
 							break;
 						}
+
 					}
 
 					break;
 				}
-
 			}
-		}
-#pragma endregion
 
+		}
 	}
+#pragma endregion
 
 }

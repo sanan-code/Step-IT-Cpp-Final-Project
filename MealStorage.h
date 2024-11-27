@@ -18,15 +18,6 @@ public:
 		this->price = 0;
 	}
 
-	Meal(int id) {
-		set_id(id);
-	}
-
-	Meal(int id, string name) {
-		set_id(id);
-		set_name(name);
-	}
-
 	Meal(int id, string name, double price) {
 		set_id(id);
 		set_name(name);
@@ -189,11 +180,23 @@ public:
 		if (msg) { cout << price << " updated"; }
 	}
 
-	int findById(int id) {
+	int findMealById(int id) {
 		//indeks nomresini qaytarir
 
 		for (size_t i = 0; i < ind; i++) {
 			if (meals[i]->get_id() == id) {
+				return i;
+			}
+		}
+
+		return -1;
+	}
+
+	int findMealByName(string name) {
+		//indeks nomresini qaytarir
+
+		for (size_t i = 0; i < ind; i++) {
+			if (meals[i]->get_name() == name) {
 				return i;
 			}
 		}

@@ -19,26 +19,6 @@ public:
 		this->price = 0;
 	}
 
-	Ingredient(string name) : Ingredient() {
-		set_name(name);
-	}
-
-	Ingredient(int id, string name) : Ingredient() {
-		set_id(id);
-		set_name(name);
-	}
-
-	Ingredient(int id, int count) : Ingredient() {
-		set_id(id);
-		set_count(count);
-	}
-
-	Ingredient(int id, string name, int count) : Ingredient() {
-		set_id(id);
-		set_name(name);
-		set_count(count);
-	}
-
 	Ingredient(int id, string name, int count, double price) : Ingredient() {
 		set_id(id);
 		set_name(name);
@@ -140,10 +120,10 @@ public:
 		if (ingredient == nullptr) { throw MyException(string("Parameter ingredient can not be null pointer"), __LINE__); }
 
 		//eger eyni adli ingredient varsa count update edilsin
-		if (findIngredient(ingredient->get_name()) != -1) { flag = true; }
+		if (findIngredientByName(ingredient->get_name()) != -1) { flag = true; }
 
 		if (flag) {
-			updateCount2(ingredient->get_name(), ingredient->get_count(), '+');
+			updateCount2(ingredient->get_id(), ingredient->get_count(), '+');
 		}
 		else {
 			//yer varmi?
@@ -199,7 +179,7 @@ public:
 	}
 
 	void removeByName(string n, bool msg = false) {
-		if (findIngredient(n) == -1) { throw MyException(string(n + ": this ingredient is not exist..."), __LINE__); }
+		if (findIngredientByName(n) == -1) { throw MyException(string(n + ": this ingredient is not exist..."), __LINE__); }
 		if (n.empty()) { throw MyException(et1("Ingredient"), __LINE__); }
 		int r = 0;
 
@@ -219,24 +199,17 @@ public:
 		if (msg) { cout << n << " was deleted..." << endl; }
 	}
 
-	void removeAll() {
-		for (size_t i = 0; i < capacity; i++) {
-			delete ingredients[i];
-			ingredients[i] == nullptr;
-		}
-	}
-
-	void updateCount1(string name, int c) {
+	void updateCount1(int id, int c) {
 		//count deyisdirir (kokden)
 		for (size_t i = 0; i < ind; i++) {
-			if (ingredients[i]->get_name() == name) {
+			if (ingredients[i]->get_id() == id) {
 				ingredients[i]->set_count(c);
 				break;
 			}
 		}
 	}
 
-	void updateCount2(string name, int c, char oper) {
+	void updateCount2(int id, int c, char oper) {
 		if (c <= 0) { throw MyException(et4("Operator", "0"), __LINE__); }
 		if (!(oper == '+' or oper == '-')) { throw MyException(string("Please use + or - operators"), __LINE__); }
 
@@ -244,7 +217,7 @@ public:
 		int tempCount = 0;
 
 		for (size_t i = 0; i < ind; i++) {
-			if (ingredients[i]->get_name() == name) {
+			if (ingredients[i]->get_id() == id) {
 				tempCount = ingredients[i]->get_count();
 
 				if (oper == '+') { tempCount += c; }
@@ -256,7 +229,25 @@ public:
 		}
 	}
 
-	void updatePrice(string name, double p) {
+	void updateNameById(int id, string name) {
+		for (size_t i = 0; i < ind; i++) {
+			if (ingredients[i]->get_id() == id) {
+				ingredients[i]->set_name(name);
+				break;
+			}
+		}
+	}
+
+	void updatePriceById(int id, double p) {
+		for (size_t i = 0; i < ind; i++) {
+			if (ingredients[i]->get_id() == id) {
+				ingredients[i]->set_price(p);
+				break;
+			}
+		}
+	}
+
+	void updatePriceByName(string name, double p) {
 		for (size_t i = 0; i < ind; i++) {
 			if (ingredients[i]->get_name() == name) {
 				ingredients[i]->set_price(p);
@@ -265,13 +256,13 @@ public:
 		}
 	}
 
-	int findIngredient(string name) {
+	int findIngredientByName(string name) {
 		//indeks nomresini return edir
 		for (size_t i = 0; i < ind; i++) { if (name == ingredients[i]->get_name()) { return i; } }
 		return -1;
 	}
 
-	int getIngredientById(int id) {
+	int findIngredientById(int id) {
 		//indeks return edir
 		for (size_t i = 0; i < ind; i++) {
 			if (ingredients[i]->get_id() == id) {
