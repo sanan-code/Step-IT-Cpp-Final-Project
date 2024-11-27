@@ -30,40 +30,40 @@ int count_ih;
 
 //Stack - data structure
 
-//class MyStack_Int {
-//	int* data = nullptr;
-//	int ind = 0;
-//	int capacity = 5;
-//public:
-//	MyStack_Int() {
-//		this->data = new int[capacity] {};
-//	}
-//
-//#pragma region Setter and Getter
-//	int* get_data() { return data; }
-//	int get_ind() { return ind; }
-//	int get_capacity() { return capacity; }
-//#pragma endregion
-//
-//#pragma region Methods
-//	void add(int t) {
-//
-//		//yoxlama
-//		if (ind == capacity) { //yer yoxdu
-//			capacity += 3;
-//			int* temp = new int [capacity] {};
-//			for (size_t i = 0; i < ind; i++) { temp[i] = data[i]; }
-//			temp[ind] = t;
-//			delete[] data;
-//			data = temp;
-//		}
-//
-//		data[ind] = t;
-//		ind++;
-//	}
-//#pragma endregion
-//
-//}
+class MyStack_Int {
+	int* data = nullptr;
+	int ind = 0;
+	int capacity = 5;
+public:
+	MyStack_Int() {
+		this->data = new int[capacity] {};
+	}
+
+#pragma region Setter and Getter
+	int* get_data() { return data; }
+	int get_ind() { return ind; }
+	int get_capacity() { return capacity; }
+#pragma endregion
+
+#pragma region Methods
+	void add(int t) {
+
+		//yoxlama
+		if (ind == capacity) { //yer yoxdu
+			capacity += 3;
+			int* temp = new int [capacity] {};
+			for (size_t i = 0; i < ind; i++) { temp[i] = data[i]; }
+			temp[ind] = t;
+			delete[] data;
+			data = temp;
+		}
+
+		data[ind] = t;
+		ind++;
+	}
+#pragma endregion
+
+};
 
 #pragma endregion
 
@@ -72,13 +72,22 @@ int count_ih;
 #pragma region Restaurant balance file
 
 //load balance to file
-void lbtf(double balance, const string filePath = "restaurantbalance") {
+void lbtf(double balance, const string filePath = "restaurantbalance", const string filePath2 = "restaurantbalancehistory") {
 	if (balance <= 0) { throw MyException(et4("Balance", "0"), __LINE__); }
 	fstream fs(filePath, ios::out);
 
 	if (fs.is_open()) {
 		fs << balance << "\n";
 		fs.close();
+	}
+	else { throw MyException(string("File not found..."), __LINE__); }
+
+	//restaurantbalancehistory
+	fstream fs2(filePath2, ios::out);
+	if (fs2.is_open()) {
+		fs2 << balance << "^";
+		fs2 << __DATE__ << "\n";
+		fs2.close();
 	}
 	else { throw MyException(string("File not found..."), __LINE__); }
 }
@@ -610,6 +619,18 @@ MealStorage*& getMenu_notEnteredMeals(MenuStorage& menus, MealStorage& ms) {
 	return meals;
 }
 
+MyStack_Int& getIngredientsOfSelectedMeal(int mealId, MenuStorage& menus) {
+	MyStack_Int msi;
+
+	for (size_t i = 0; i < menus.get_ind(); i++) { //menus
+		if (mealId == menus.get_menus()[i]->get_mealId()) {
+			msi.add(menus.get_menus()[i]->get_ingId());
+		}
+	}
+
+	return msi;
+}
+
 //load menus to file
 void lmenustf(MenuStorage& menuS, const string filePath = "menus") {
 	fstream fs(filePath, ios::out);
@@ -675,6 +696,8 @@ void addNewMenu(MenuStorage& menuS, MealStorage& ms, IngredientStorage& is) {
 	string selectedMealName = "";
 
 	MealStorage* notExistMeals = getMenu_notEnteredMeals(menuS, ms); //mealda olub da menu-da olmayanlar
+
+	//yoxlama - elave edilmeyen meal varmi?
 	if (notExistMeals->get_ind() == 0) {
 		cout << "There is not any meal that have not been added to menu" << endl;
 		cout << "If you want to new ingredients to meal please select <update menu> in the menu" << endl;
@@ -743,6 +766,105 @@ void addNewMenu(MenuStorage& menuS, MealStorage& ms, IngredientStorage& is) {
 	lbtf(restaurantBalance);
 	system("cls");
 	cout << "New menu added successfully..." << endl;
+}
+
+void updateMenu(MenuStorage& menus, MealStorage& ms, IngredientStorage& is) {
+
+	MyStack_Int ingredientsOfMeal;
+	Menu* menu = new Menu();
+	int menuSelection = 0, ingredientSelection = 0;
+	int operation = 0, newIngCount = 0;
+	int selectedMealId = 0, selectedIngredientId = 0;
+	double ingPrice = 0;
+	int r = 1;
+
+	//menuyunu goster ve sec
+	menus.show2(ms, is);
+	cout << endl;
+	menuSelection = getMenuSelection(1, ms.get_ind());
+
+	//hansi emeliyyati etmek isteyirsen (silmek)
+	cout << "\n1. add\n2 delete\n3. update" << endl;
+	operation = getMenuSelection(1, 3);
+
+	switch (operation) {
+	case 1: //add
+		system("cls");
+		is.show(3);
+		ingredientSelection = getMenuSelection(1, is.get_ind());
+
+		//secilen meal-in id-si
+		selectedMealId = ms.get_meals()[menuSelection - 1]->get_id();
+		//secilen ingredientin id-si
+		selectedIngredientId = is.get_ingredients()[ingredientSelection - 1]->get_id();
+		//count
+		cout << "Count: ";
+		cin >> newIngCount;
+		//price
+		ingPrice = is.get_ingredients()[ingredientSelection - 1]->get_price();
+
+		menu->set_mealId(selectedMealId);
+		menu->set_ingId(selectedIngredientId);
+		menu->set_ingCount(newIngCount);
+		menus.add(menu);
+
+		restaurantBalance -= (ingPrice * newIngCount);
+		is.updateCount2(selectedIngredientId, newIngCount, '-');
+
+		lmenustf(menus);
+		litf(is);
+		lbtf(restaurantBalance);
+		cout << "New ingredient added" << endl;
+		break;
+	case 2: //delete
+		//secilen mealin ingredientlerini goster ve sec
+		system("cls");
+		cout << "Select ingredient you want to delete" << endl;
+		ingredientsOfMeal = getIngredientsOfSelectedMeal(ms.get_meals()[menuSelection - 1]->get_id(), menus);
+		for (size_t i = 0; i < ingredientsOfMeal.get_ind(); i++) { //ingredient idler
+			for (size_t j = 0; j < is.get_ind(); j++) { //ingredients
+				if (is.get_ingredients()[j]->get_id() == ingredientsOfMeal.get_data()[i]) {
+					cout << (r) << ". " << is.get_ingredients()[j]->get_name();
+					cout << " (" << is.get_ingredients()[is.findIngredientById(ingredientsOfMeal.get_data()[i])]->get_count() << ")";
+					cout << endl;
+					r++;
+				}
+			}
+		}
+		cout << endl;
+		ingredientSelection = getMenuSelection(1, ingredientsOfMeal.get_ind());
+
+		menus.removeByIdAndEngId(ms.get_meals()[menuSelection - 1]->get_id(), ingredientsOfMeal.get_data()[ingredientSelection - 1]);
+		//silinende ingredientlerden azaltmakodunu da yaz
+
+		lmenustf(menus);
+		system("cls");
+		cout << "Ingredient removed from meal in menu" << endl;
+		break;
+	case 3: //update
+		system("cls");
+		is.show(3);
+		ingredientSelection = getMenuSelection(1, is.get_ind());
+
+		//secilen meal-in id-si
+		selectedMealId = ms.get_meals()[menuSelection - 1]->get_id();
+		//secilen ingredientin id-si
+		selectedIngredientId = is.get_ingredients()[ingredientSelection - 1]->get_id();
+		//count
+		cout << "Count: ";
+		cin >> newIngCount;
+		//price
+		ingPrice = is.get_ingredients()[ingredientSelection - 1]->get_price();
+
+		menus.updateCount(selectedMealId, selectedIngredientId, newIngCount);
+		//update olanda ingredientlerden deyisme kodunu da yaz
+
+		lmenustf(menus);
+		system("cls");
+		cout << "Ingredient updated" << endl;
+		break;
+	}
+
 }
 
 #pragma endregion
@@ -959,6 +1081,7 @@ void main() {
 					break;
 				case 3: //admin
 
+					//ok
 					while (ae_admin) {
 						try { menu2_3_select = menu2_3(); }
 						catch (MyException& ex) { cout << ex.get_txt() << "\n\n"; }
@@ -1046,7 +1169,7 @@ void main() {
 							}
 
 							break;
-						case 2: //Meals
+						case 2: //Meals - ok
 							ae_admin_meals = true;
 
 							//ok
@@ -1093,8 +1216,10 @@ void main() {
 										int selectedMealIndex;
 										ms.show();
 										selectedMealIndex = getMenuSelection(1, ms.get_ind());
-										ms.removeById(selectedMealIndex - 1);
+										menuSto.removeById(ms.get_meals()[selectedMealIndex - 1]->get_id()); //menu cedvelinden silinir
+										ms.removeById(ms.get_meals()[selectedMealIndex - 1]->get_id()); //mealdan silinme
 										lmtf(ms);
+										lmenustf(menuSto);
 										cout << "Meal removed..." << endl;
 									}
 									catch (MyException& ex) { cout << ex.get_txt() << "\n\n"; }
@@ -1111,7 +1236,7 @@ void main() {
 							}
 
 							break;
-						case 3: //Menus
+						case 3: //Menus - ok
 							ae_admin_menus = true;
 
 							while (ae_admin_menus) {
@@ -1120,44 +1245,49 @@ void main() {
 								system("cls");
 
 								switch (menu2_3_3_select) {
-								case 1: //add menu
+								case 1: //add menu - ok
 									cout << "Add new menu" << endl;
 									try { addNewMenu(menuSto, ms, is); }
 									catch (MyException& ex) { cout << ex.get_txt() << "\n\n"; }
 									break;
-								case 2: //update menu
+								case 2: //update menu - ok
+									try { updateMenu(menuSto, ms, is); }
+									catch (MyException& ex) { cout << ex.get_txt() << "\n\n"; }
 									break;
-								case 3: //remove menu
+								case 3: //show all menus - ok
+									cout << "\t---All menu---" << endl;
+									cout << "row number. meal name, (price) + ingredients" << endl << endl;
+									menuSto.show2(ms, is);
 									break;
-								case 4: //show all menus
-									break;
-								case 5: //go back
+								case 4: //go back - ok
 									ae_admin_menus = false;
 									break;
 								}
 							}
 
 							break;
-						case 4: //Other
+						case 4: //Other - ok
 							ae_admin_others = true;
 
+							// ok
 							while (ae_admin_others) {
 								try { menu2_3_4_select = menu2_3_4(); }
 								catch (MyException& ex) { cout << ex.get_txt() << "\n\n"; }
 								system("cls");
 
 								switch (menu2_3_4_select) {
-								case 1: //Restaurant balance
+								case 1: //Restaurant balance - ok
 									cout << "Restaurant balance: " << restaurantBalance << endl;
 									break;
-								case 2: //Show all users
+								case 2: //Show all users - ok
+									as.showAll();
 									break;
-								case 3: //Ingredient history
+								case 3: //Ingredient history - ok
 									cout << "Total buy count: " << ihs.get_total_count() << endl;
 									cout << "Total transaction: " << ihs.get_ind() << endl;
 									ihs.make_history_table();
 									break;
-								case 4: //go back
+								case 4: //go back - ok
 									ae_admin_others = false;
 									break;
 								}

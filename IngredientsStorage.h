@@ -39,7 +39,7 @@ public:
 	}
 
 	void set_count(int count) {
-		if (count <= 0) { throw MyException(et4("Count", to_string(count), 1), __LINE__); }
+		if (count < 0) { throw MyException(et4("Count", to_string(count), 1), __LINE__); }
 		this->count = count;
 	}
 

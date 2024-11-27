@@ -97,7 +97,7 @@ int menu2_3_2() {
 	cout << "5. show all meals" << endl;
 	cout << "6. go back" << endl;
 
-	int selection = getMenuSelection(1, 5);
+	int selection = getMenuSelection(1, 6);
 	return selection;
 }
 
@@ -106,11 +106,10 @@ int menu2_3_3() {
 
 	cout << "\n1. add menu" << endl;
 	cout << "2. update menu" << endl;
-	cout << "3. remove menu" << endl;
-	cout << "4. show all menus" << endl;
-	cout << "5. go back" << endl;
+	cout << "3. show all menus" << endl;
+	cout << "4. go back" << endl;
 
-	int selection = getMenuSelection(1, 5);
+	int selection = getMenuSelection(1, 4);
 	return selection;
 }
 

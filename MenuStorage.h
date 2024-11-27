@@ -46,14 +46,6 @@ public:
 
 #pragma region Methods
 
-	void show(int r) {
-		cout << r << " -----" << endl;
-		cout << "Meal ID: " << mealId << endl;
-		cout << "Ingredient ID: " << ingId << endl;
-		cout << "Ingredient count: " << ingCount << endl;
-		cout << endl;
-	}
-
 #pragma endregion
 
 };
@@ -133,6 +125,34 @@ public:
 		if (msg) { cout << id << ": id was deleted..." << endl; }
 	}
 
+	void removeByIdAndEngId(int id, int ingId) {
+		int r = 0;
+
+		//main
+		Menu** temp = new Menu * [capacity] {};
+		for (size_t i = 0; i < ind; i++) {
+			if (!(menus[i]->get_mealId() == id and menus[i]->get_ingId() == ingId)) {
+				temp[r] = menus[i];
+				r++;
+			}
+		}
+
+		delete[] menus;
+		menus = temp;
+		ind -= (ind - r);
+	}
+
+	void updateCount(int mealid, int ingId, int newCount) {
+
+		for (size_t i = 0; i < ind; i++) {
+			if (menus[i]->get_mealId() == mealid and menus[i]->get_ingId() == ingId) {
+				menus[i]->set_ingCount(newCount);
+				break;
+			}
+		}
+
+	}
+
 	//gonderilen meal idnin melumatlarini gosterir
 	void show1(int mealId, MealStorage& ms, IngredientStorage& is) {
 		int ingId = 0;
@@ -151,6 +171,28 @@ public:
 		}
 
 	}
+
+	//butun menunu gosterir
+	void show2(MealStorage& ms, IngredientStorage& is) {
+		for (size_t i = 0; i < ms.get_ind(); i++) { //meals uzerinde addimlama
+
+			cout << (i + 1) << ". ";
+			cout << ms.get_meals()[i]->get_name() << ", ";
+			cout << "(" << ms.get_meals()[i]->get_price() << ") ";
+			cout << endl;
+
+			cout << "  Ingredients: ";
+			for (size_t j = 0; j < ind; j++) {
+				if (ms.get_meals()[i]->get_id() == menus[j]->get_mealId()) {
+					cout << is.get_ingredients()[is.findIngredientById(menus[j]->get_ingId())]->get_name() << ", ";
+				}
+			}
+
+			cout << endl;
+		}
+	}
+
+
 
 #pragma endregion
 
